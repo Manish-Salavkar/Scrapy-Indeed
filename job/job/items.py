@@ -11,9 +11,9 @@ class JobItem(scrapy.Item):
     # name = scrapy.Field()
     pass
 
-# class LinkItem(scrapy.Item):
-#     extracted_date_str = scrapy.Field()
-#     final_link = scrapy.Field()
+class JobItem(scrapy.Item):
+    date = scrapy.Field()
+    final_link = scrapy.Field()
 
 
 class DataItem(scrapy.Item):

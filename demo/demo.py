@@ -71,42 +71,42 @@
 # "Job ID:  37655 |  Location:  Airoli, Maharashtra, India \n    \n    \n   Responsible for translating business requirements into detailed function specifications of the respective Sub-Domain. Is responsible for the delivery of global IT business application services, including consulting, projects and maintenance. \n    \n     What will you be doing?  \n   \n   Development and implementation of Sub-Domain product  \n   1.Setting up (customising) the corresponding systems configuration and documentation  \n   2. Define project brief, initial cost assessment of projects, and the integration of other projects, and in potentially suppliers  \n   3. Analyse, evaluate and define system requirements and change requests  \n   4. Plan and monitor small and medium projects (incl. Resources) towards OTIF implementation of selected solution (On Time In Full) \n    \n    \n   Ensure effective support of Sub-Domain products  \n   1. Responsible for the implementation of service/product roadmap, ensuring alignment with business needs  \n   2. Responsible for specifying required service levels based on business criticality  \n   3. Responsible to ensure that service levels are met  \n   4. Responsible of deliver support/maintenance services according to agreed service levels and defined KPIs  \n   5. Plans and coordinates project resources  \n   6. Creation and development and/or implementation of user training/instruction  \n   7. Does Monitoring of and assures ticket handling in accordance with defined service level \n    \n    \n   Increase of efficiency  \n   1. Analyze the information requirements and information flows required to support better processes  \n   2. Identify process waste and improve within given application to ensure better data quality/connectivity \n    \n    \n   Leadership / People Management  \n   1. May lead a small team of IT Consultants in progressing the detail of the projects  \n   2. Effectively manage vendors to maintain support and deliver new features in a cost effective manner. \n    \n    \n   What do we expect?  \n   \n   Education:  \n   Higher education in a technical or business direction (e.g., computer science or MBA) at bachelor’s level or higher.  \n   At least 5 years of experience in the application environment and development tools relevant to the job \n    \n    \n   Business experience:  \n   More than 5 years of experience with relevant IT systems.  \n   Good consulting and project management skills, is familiar with an international, multi- cultural environment  \n   If needed: Specific SubDomain relevant knowledge \n    \n    \n   Additional Qualifications:  \n   Languages: Good written and spoken English is a must, other international languages desired  \n   International Cross-Culture experience  \n   Can deal with constantly changing problems, processes and technologies  \n   Works independently and proactively  \n   Communicative, initiates and maintains contacts with relevant business partners  \n   Analytical thinking, argues convincingly and fact-based \n    \n    \n   What´s in it for you?  \n   \n   \n    Be part of an amazing team, who will be there to support you.  \n    A forward-looking company, with a culture of innovation and a strong portfolio in sustainable technologies.  \n    Long term growth opportunity  \n    Employee Wellbeing & Assistance Program  \n    Work-Life Balance  \n    Hybrid Work Model  \n    On-site Recreation Center  \n    30 Days Annual Paid Leaves  \n    In-house Gym  \n    Subsidized Cafeteria Meals  \n    Centralized Company Transport For Designated Routes  \n    On-site Employee Health Center  \n    Group Medical Insurance  \n    Day Care facility (100% sponsored by Clariant)  \n    Inclusive Work Environment  \n    Ongoing Professional Development Opportunities  \n    Approachable Leadership  \n    Speak Up Culture \n   \n    \n    \n     \n   \n   Clariant is a focused, sustainable and innovative specialty chemical company based in Muttenz near Basel/Switzerland. On 31 December 2021, Clariant totaled a staff number of 11 537 and recorded sales of CHF 4.372 billion in the fiscal year for its continuing businesses. The company reports in three business areas: Care Chemicals, Catalysis and Natural Resources. Clariant’s corporate strategy is led by the overarching purpose of ‘Greater chemistry – between people and planet’ and reflects the importance of connecting customer focus, innovation, sustainability, and people. Join us and help create sustainable value through chemistry for customers all over the globe."
 
 
-import psycopg2
-from psycopg2 import Error
+# import psycopg2
+# from psycopg2 import Error
 
-database_config={
-                'database': 'scrapy_data',
-                'user': 'postgres',
-                'password': 'man',
-                'host': 'localhost',
-                'port': '2018',
-            }
+# database_config={
+#                 'database': 'scrapy_data',
+#                 'user': 'postgres',
+#                 'password': 'man',
+#                 'host': 'localhost',
+#                 'port': '2018',
+#             }
 
-try:
-    # Establish a connection to the PostgreSQL database
-    connection = psycopg2.connect(**database_config)
+# try:
+#     # Establish a connection to the PostgreSQL database
+#     connection = psycopg2.connect(**database_config)
 
-    # Create a cursor object to interact with the database
-    cursor = connection.cursor()
+#     # Create a cursor object to interact with the database
+#     cursor = connection.cursor()
 
-    # Define your SQL query
-    sql_query = "SELECT job_description FROM public.scraped_data WHERE company_name = 'IBSAR Institute of Business Studies and Research'"
+#     # Define your SQL query
+#     sql_query = "SELECT job_description FROM public.scraped_data WHERE company_name = 'IBSAR Institute of Business Studies and Research'"
 
-    # Execute the SQL query
-    cursor.execute(sql_query)
+#     # Execute the SQL query
+#     cursor.execute(sql_query)
 
-    # Fetch all rows from the result set
-    rows = cursor.fetchall()
+#     # Fetch all rows from the result set
+#     rows = cursor.fetchall()
 
-    # Print the retrieved data
-    for row in rows:
-        print(row)
+#     # Print the retrieved data
+#     for row in rows:
+#         print(row)
 
-except Error as e:
-    print(f"Error connecting to PostgreSQL: {e}")
-finally:
-    # Close the cursor and connection
-    if cursor:
-        cursor.close()
-    if connection:
-        connection.close()
+# except Error as e:
+#     print(f"Error connecting to PostgreSQL: {e}")
+# finally:
+#     # Close the cursor and connection
+#     if cursor:
+#         cursor.close()
+#     if connection:
+#         connection.close()

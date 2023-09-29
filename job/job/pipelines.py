@@ -1,96 +1,97 @@
-# Define your item pipelines here
-#
-# Don't forget to add your pipeline to the ITEM_PIPELINES setting
-# See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-
-
-# useful for handling different item types with a single interface
-from itemadapter import ItemAdapter
 from scrapy.exceptions import DropItem
 from scrapy import Spider
 import psycopg2
 from scrapy.exceptions import DropItem
+from job.items import JobItem
+from job.settings import DATABASE_CONFIG
+from job.database_manager import database_manager
+import re
 
-class JobPipeline:
-    def process_item(self, item, spider):
-        return item
+                
 
-class DataDuplicationPipeline:
-    def __init__(self, database_config):
-        self.database_config = database_config
-
-    @classmethod
-    def from_crawler(cls, crawler):
-        return cls(
-            database_config={
-                'database': 'scrapy_data',
-                'user': 'postgres',
-                'password': 'man',
-                'host': 'localhost',
-                'port': '2018',
-            }
-        )
+class DataBaseLinkPipeline:
     
-    def open_spider(self, spider):
-        self.conn = psycopg2.connect(**self.database_config)
-        self.cursor = self.conn.cursor()
-
-    def close_spider(self, spider):
-        self.cursor.close()
-        self.conn.close()
-
     def process_item(self, item, spider):
+        connection, cursor = database_manager.get_connection()
+
         try:
-            self.cursor.execute("SELECT * FROM scraped_data WHERE url = %s", (item['url'],))
-            existing_data = self.cursor.fetchone()
-            if existing_data is not None:
-                raise DropItem(f"Duplicate item found: {item['url']}")
-        except Exception as e:
-            spider.logger.error(f"Error checking data existence: {e}")
+            final_link = item.get('final_link', '')
+            fccid = None
+
+            fccid_match = re.search(r'fccid=([^&]+)', final_link)
+            if fccid_match:
+                fccid = fccid_match.group(1)
+
+            cursor.execute("SELECT fccid FROM link_data WHERE fccid = %s", (fccid,))
+            existing_fccid = cursor.fetchone()
+
+            if existing_fccid is None:
+                cursor.execute(
+                    """
+                    INSERT INTO link_data (fccid, date, final_link)
+                    VALUES (%s, %s, %s)
+                    """,
+                    (
+                        fccid,
+                        item['date'],
+                        final_link,
+                    ),
+                )
+                connection.commit()
+            
+            else:
+                raise DropItem(f"Duplicate: {fccid}")
+        except psycopg2.Error as e:
+            spider.logger.error(f"Error saving data to the database: {e}")
         return item
+
+
     
 class DatabaseSavePipeline:
-    def __init__(self, database_config):
-        self.database_config = database_config
-
-    @classmethod
-    def from_crawler(cls, crawler):
-        return cls(
-            database_config={
-                'database': 'scrapy_data',
-                'user': 'postgres',
-                'password': 'man',
-                'host': 'localhost',
-                'port': '2018',
-            }
-        )
-    
-    def open_spider(self, spider):
-        self.conn = psycopg2.connect(**self.database_config)
-        self.cursor = self.conn.cursor()
-
-    def close_spider(self, spider):
-        self.cursor.close()
-        self.conn.close()
 
     def process_item(self, item, spider):
+        connection, cursor = database_manager.get_connection()
         try:
-            self.cursor.execute(
+            date = item.get('date', '')
+            job_title = item.get('job_title', '')
+            company_name = item.get('company_name', '')
+            company_location = item.get('company_location', '')
+            salary = item.get('salary', '')
+            job_description = item.get('job_description', '')
+            url = item.get('url', '')
+
+            final_url = item.get('url', '')
+            fccid = None
+
+            fccid_match = re.search(r'fccid=([^&]+)', final_url)
+            if fccid_match:
+                fccid = fccid_match.group(1)
+
+            cursor.execute("SELECT fccid FROM scraped_data WHERE fccid = %s", (fccid,))
+            existing_fccid = cursor.fetchone()
+
+            if existing_fccid is not None:
+                raise DropItem(f"Duplicate fccid found: {fccid}")
+
+            
+            
+            cursor.execute(
                 """
-                INSERT INTO scraped_data (date, job_title, company_name, company_location, salary, job_description, url)
-                VALUES (%s, %s, %s, %s, %s, %s, %s)
+                INSERT INTO scraped_data (fccid, date, job_title, company_name, company_location, salary, job_description, url)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
                 """,
                 (
-                    item['date'],
-                    item['job_title'],
-                    item['company_name'],
-                    item['company_location'],
-                    item['salary'],
-                    item['job_description'],
-                    item['url'],
+                    fccid,
+                    date,
+                    job_title,
+                    company_name,
+                    company_location,
+                    salary,
+                    job_description,
+                    url,
                 ),
             )
-            self.conn.commit()
-        except Exception as e:
+            connection.commit()
+        except psycopg2.Error as e:
             spider.logger.error(f"Error saving data to the database: {e}")
         return item

@@ -12,8 +12,16 @@ BOT_NAME = "job"
 SPIDER_MODULES = ["job.spiders"]
 NEWSPIDER_MODULE = "job.spiders"
 
-SCRAPEOPS_API_KEY = 'API_KEY'
+SCRAPEOPS_API_KEY = 'key'
 SCRAPEOPS_PROXY_ENABLED = True
+
+DATABASE_CONFIG = {
+    'database': 'database',
+    'user': 'user',
+    'password': 'password',
+    'host': 'localhost',
+    'port': 'port',
+}
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
@@ -28,7 +36,7 @@ CONCURRENT_REQUESTS = 3
 # Configure a delay for requests for the same website (default: 0)
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-DOWNLOAD_DELAY = 5
+DOWNLOAD_DELAY = 10
 # The download delay setting will honor only one of:
 #CONCURRENT_REQUESTS_PER_DOMAIN = 16
 #CONCURRENT_REQUESTS_PER_IP = 16
@@ -69,9 +77,9 @@ DOWNLOADER_MIDDLEWARES = {
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    'job.pipelines.DataDuplicationPipeline': 100,
-    'job.pipelines.DatabaseSavePipeline': 200,
-#    "job.pipelines.JobPipeline": 300,
+    "job.pipelines.DataBaseLinkPipeline": 300,
+    # 'job.pipelines.DataDuplicationPipeline': 400,
+    'job.pipelines.DatabaseSavePipeline': 500,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
