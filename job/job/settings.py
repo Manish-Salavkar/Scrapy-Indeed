@@ -12,15 +12,15 @@ BOT_NAME = "job"
 SPIDER_MODULES = ["job.spiders"]
 NEWSPIDER_MODULE = "job.spiders"
 
-SCRAPEOPS_API_KEY = 'key'
+SCRAPEOPS_API_KEY = 'KEY'
 SCRAPEOPS_PROXY_ENABLED = True
 
 DATABASE_CONFIG = {
-    'database': 'database',
-    'user': 'user',
-    'password': 'password',
+    'database': 'scrapy_data',
+    'user': 'postgres',
+    'password': 'man',
     'host': 'localhost',
-    'port': 'port',
+    'port': '2018',
 }
 
 
@@ -77,7 +77,7 @@ DOWNLOADER_MIDDLEWARES = {
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    "job.pipelines.DataBaseLinkPipeline": 300,
+    # "job.pipelines.DataBaseLinkPipeline": 300,
     # 'job.pipelines.DataDuplicationPipeline': 400,
     'job.pipelines.DatabaseSavePipeline': 500,
 }

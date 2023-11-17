@@ -1,3 +1,4 @@
+# job\job\spiders\dataspider.py
 import scrapy
 import json
 from urllib.parse import urlencode, unquote
@@ -5,6 +6,7 @@ from datetime import datetime
 from job.items import DataItem
 from job.settings import SCRAPEOPS_API_KEY
 import psycopg2
+from job.database_manager import database_manager
 
 KEY = SCRAPEOPS_API_KEY
 
@@ -18,15 +20,8 @@ class DataspiderSpider(scrapy.Spider):
     name = "dataspider"
 
     def start_requests(self):
-        
-        connection = psycopg2.connect(
-            database='scrapy_data',
-            user='postgres',
-            password='man',
-            host='localhost',
-            port='2018'
-        )
-        cursor = connection.cursor()
+
+        connection, cursor = database_manager.get_connection()
 
         try:
             cursor.execute("SELECT final_link, date FROM link_data")
@@ -38,8 +33,7 @@ class DataspiderSpider(scrapy.Spider):
                     self.logger.info(f"Processing URL: {url}")
                     yield scrapy.Request(url, callback=self.parse, meta={'proxy_url': proxy_url, 'date': date})
         finally:
-            cursor.close()
-            connection.close()
+            database_manager.close_connection()
 
     def parse(self, response):
         item = DataItem()

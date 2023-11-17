@@ -1,3 +1,4 @@
+# job\job\database_manager.py
 import psycopg2
 from scrapy.utils.project import get_project_settings
 
